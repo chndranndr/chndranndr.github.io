@@ -1,38 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Update data vaksinasi</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+  </head>
 
+  <div class="container">
+    <h2>Table Data Vaksinasi</h2>
+    <p id="showData"></p>
+    <script>
+      function convert(obj) {
+        const result = {};
+        Object.keys(obj).forEach(function (key) {
+          result[key.replace(/_/g, " ")] = obj[key];
+        });
 
-<p id="showData"></p>
-<script>
-    var jsonData;
-    $.getJSON('https://raw.githubusercontent.com/lantip/monitoring-tweet-vaksin/master/result.json', function(data) {
+        return result;
+      }
 
-        var e = data;
-        console.log(e);
-        for (e, o = [], r = 0; r < e.length; r++)
-            for (var t in e[r]) - 1 === o.indexOf(t) && o.push(t);
+      var jsonData;
+      $.getJSON(
+        "https://raw.githubusercontent.com/lantip/monitoring-tweet-vaksin/master/result.json",
+        function (data) {
+          var e = data.map(function (o){
+              return convert(o);
+          });
+          console.log(e);
+          for (e, o = [], r = 0; r < e.length; r++)
+            for (var t in e[r]) -1 === o.indexOf(t) && o.push(t);
 
-        var n = document.createElement("table"),
+          var n = document.createElement("table"),
             a = n.insertRow(-1);
-        for (r = 0; r < o.length; r++) {
+          for (r = 0; r < o.length; r++) {
             var i = document.createElement("th");
-            i.innerHTML = o[r], a.appendChild(i)
-        }
-        for (r = 0; r < e.length; r++) {
+            (i.innerHTML = o[r]), a.appendChild(i);
+          }
+          for (r = 0; r < e.length; r++) {
             a = n.insertRow(-1);
             for (var c = 0; c < o.length; c++) {
-                a.insertCell(-1).innerHTML = e[r][o[c]]
+              a.insertCell(-1).innerHTML = e[r][o[c]];
             }
+          }
+          var l = document.getElementById("showData");
+          n.setAttribute("class", "table table-striped table-bordered");
+          (l.innerHTML = ""), l.appendChild(n);
         }
-        var l = document.getElementById("showData");
-        n.setAttribute('class', 'table table-striped');
-        l.innerHTML = "", l.appendChild(n)
-    });
-</script>
-</div>
+      );
+    </script>
+  </div>
+</html>
