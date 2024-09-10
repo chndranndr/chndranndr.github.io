@@ -1,65 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Update data vaksinasi</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-      crossorigin="anonymous"
-    />
-  </head>
-
-  <div class="container">
-    <h2>Table Data Vaksinasi</h2>
-    <p id="showData"></p>
-    <script>
-      function convert(obj) {
-        const result = {};
-        Object.keys(obj).forEach(function (key) {
-          result[key.replace(/_/g, " ")] = obj[key];
-        });
-
-        return result;
-      }
-
-      var jsonData;
-      $.getJSON(
-        "https://raw.githubusercontent.com/lantip/monitoring-tweet-vaksin/master/result.json",
-        function (data) {
-          var e = data.map(function (o){
-              return convert(o);
-          });
-          console.log(e);
-          for (e, o = [], r = 0; r < e.length; r++)
-            for (var t in e[r]) -1 === o.indexOf(t) && o.push(t);
-
-          var n = document.createElement("table"),
-            a = n.insertRow(-1);
-          for (r = 0; r < o.length; r++) {
-            var i = document.createElement("th");
-            (i.innerHTML = o[r]), a.appendChild(i);
-          }
-          for (r = 0; r < e.length; r++) {
-            a = n.insertRow(-1);
-            for (var c = 0; c < o.length; c++) {
-              a.insertCell(-1).innerHTML = e[r][o[c]];
-            }
-          }
-          var l = document.getElementById("showData");
-          n.setAttribute("class", "table table-striped table-bordered");
-          (l.innerHTML = ""), l.appendChild(n);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chandra Aji Anindra - Software Engineer</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            max-width: 80ch;
+            margin: 0 auto;
+            padding: 1ch;
         }
-      );
+        header {
+            border-bottom: 1px solid #ffffff;
+            padding-bottom: 1ch;
+            margin-bottom: 2ch;
+        }
+        h1, h2 {
+            margin-bottom: 1ch;
+        }
+        .section {
+            margin-bottom: 3ch;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .grid > * {
+            flex: 1 1 20ch;
+            margin-right: 2ch;
+        }
+        pre {
+            background-color: #000000;
+            padding: 1ch;
+            overflow-x: auto;
+        }
+        a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <pre>
+╭───────────────────────────────────────────────╮
+│ CHANDRA AJI ANINDRA - SOFTWARE ENGINEER       │
+╰───────────────────────────────────────────────╯
+        </pre>
+        <p>Email: <a href="mailto:chandra1293@live.com">chandra1293@live.com</a></p>
+        <p>LinkedIn: <a href="https://www.linkedin.com/in/chandra-anindra/" target="_blank">@chandra-anindra</a></p>
+    </header>
+
+    <div class="content">
+        <section class="section" id="about">
+            <h2>About</h2>
+            <p>A versatile IT enthusiast with strong motivational drive to succeed in the real world. Experienced software engineer with a passion for developing innovative solutions and a track record of success in the industry.</p>
+        </section>
+
+        <section class="section" id="experience">
+            <h2>Work Experience</h2>
+
+            <h3>Back End Developer</h3>
+            <ul>
+                <li>Company: PT. Infosys Solusi Terpadu · Full-time</li>
+                <li>Period: Jul 2023 - Present · 1 yr 3 mos</li>
+                <li>Location: Jakarta, Indonesia · Hybrid</li>
+            </ul>
+
+            <h3>Infrastructure Engineer</h3>
+            <ul>
+                <li>Company: JULO</li>
+                <li>Period: Oct 2022 - Jun 2023 · 9 mos</li>
+                <li>Skills: Jenkins · Nginx · Grafana · Django · Kubernetes</li>
+            </ul>
+
+            <h3>Full-stack Developer</h3>
+            <ul>
+                <li>Company: Titipaja · Full-time</li>
+                <li>Period: May 2021 - Sep 2022 · 1 yr 5 mos</li>
+                <li>Location: Jakarta, Indonesia</li>
+            </ul>
+
+            <h3>Java Software Engineer</h3>
+            <ul>
+                <li>Company: Prudential Indonesia (PT Prudential Life Assurance) · Contract</li>
+                <li>Period: Nov 2019 - Apr 2021 · 1 yr 6 mos</li>
+                <li>Location: Greater Jakarta Area, Indonesia</li>
+            </ul>
+
+            <h3>Junior Java Developer</h3>
+            <ul>
+                <li>Company: PT FIRST WAP International (1rstWAP)</li>
+                <li>Period: Jun 2018 - Sep 2019 · 1 yr 4 mos</li>
+            </ul>
+
+            <h3>Programmer</h3>
+            <ul>
+                <li>Company: Gameloft</li>
+                <li>Period: Feb 2017 - Jan 2018 · 1 yr</li>
+                <li>Location: Yogyakarta Area, Yogyakarta, Indonesia</li>
+            </ul>
+        </section>
+
+        <section class="section" id="education">
+            <h2>Education</h2>
+            <h3>Universitas Jenderal Soedirman</h3>
+            <p>Location: [Location not provided]</p>
+            <p>Degree: [Degree not provided]</p>
+        </section>
+
+        <section class="section" id="skills">
+            <h2>Skills</h2>
+            <div class="grid">
+                <ul>
+                    <li>Java</li>
+                    <li>Spring Boot</li>
+                    <li>MySQL</li>
+                    <li>PostgreSQL</li>
+                    <li>JavaScript</li>
+                </ul>
+                <ul>
+                    <li>HTML</li>
+                    <li>Docker</li>
+                    <li>Kubernetes</li>
+                    <li>AWS</li>
+                    <li>GCP</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="certifications">
+            <h2>Certifications</h2>
+            <ul>
+                <li>AWS Academy Graduate - AWS Academy Cloud Foundations (Amazon Web Services)
+                    <ul>
+                        <li>Issued by: Amazon Web Services Training and Certification</li>
+                        <li>Issued on: 09 Sep 2021</li>
+                        <li>Skills: AWS Architecture, AWS Cloud, AWS Core Services, AWS Pricing, AWS Support</li>
+                        <li><a href="https://www.credly.com/badges/8969ffe0-a706-4142-b493-a3062fb8f433" target="_blank">View Certificate</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Add any JavaScript functionality here if needed
     </script>
-  </div>
+</body>
 </html>
