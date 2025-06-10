@@ -3,158 +3,525 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chandra Aji Anindra - Software Engineer</title>
+    <title>Chandra Aji Anindra - Senior Backend Developer</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Courier New', monospace;
             line-height: 1.6;
-            margin: 0;
-            padding: 0;
             background-color: #000000;
             color: #ffffff;
-            max-width: 80ch;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Grid background pattern */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(30, 30, 30, 0.8) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 30, 30, 0.8) 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .container {
+            max-width: 900px;
             margin: 0 auto;
-            padding: 1ch;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
+        
         header {
-            border-bottom: 1px solid #ffffff;
-            padding-bottom: 1ch;
-            margin-bottom: 2ch;
+            border-bottom: 1px solid #00cc44;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
         }
-        h1, h2 {
-            margin-bottom: 1ch;
+        
+        .title-box {
+            background-color: rgba(0, 40, 0, 0.4);
+            border: 1px solid #00cc44;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .title-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00ff55, transparent);
+            animation: scanline 3s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #00ff55;
+            text-shadow: 0 0 5px rgba(0, 255, 85, 0.5);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 20, 0, 0.3);
+            border: 1px solid #008833;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-icon {
+            color: #00ff55;
+            width: 24px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #00ff55;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #008833;
+            position: relative;
+        }
+        
+        h2::after {
+            content: ">";
+            position: absolute;
+            right: 0;
+            color: #00cc44;
+        }
+        
         .section {
-            margin-bottom: 3ch;
+            margin-bottom: 2.5rem;
+            background-color: rgba(0, 20, 0, 0.1);
+            border: 1px solid rgba(0, 136, 51, 0.3);
+            padding: 1.5rem;
+            border-radius: 4px;
+            position: relative;
         }
-        .grid {
+        
+        .section:hover {
+            background-color: rgba(0, 30, 0, 0.2);
+            border-color: rgba(0, 204, 68, 0.5);
+        }
+        
+        .job {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #008833;
+        }
+        
+        .job:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .company {
+            font-weight: bold;
+            color: #00cc44;
+            font-size: 1.1rem;
+        }
+        
+        .job-title {
+            font-weight: bold;
+            margin: 0.3rem 0;
+            color: #ffffff;
+        }
+        
+        .period {
+            font-style: italic;
+            color: #999;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        li::before {
+            content: "■";
+            color: #00cc44;
+            position: absolute;
+            left: -1.2rem;
+            font-size: 0.7rem;
+            top: 0.4rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .skills-category {
+            background-color: rgba(0, 30, 0, 0.2);
+            border: 1px solid rgba(0, 136, 51, 0.3);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        
+        .skills-category h3 {
+            color: #00ff55;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #008833;
+            padding-bottom: 0.3rem;
+        }
+        
+        .education {
             display: flex;
             flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
         }
-        .grid > * {
-            flex: 1 1 20ch;
-            margin-right: 2ch;
+        
+        .edu-details {
+            flex: 1;
         }
-        pre {
-            background-color: #000000;
-            padding: 1ch;
-            overflow-x: auto;
+        
+        .terminal-input {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            color: #00ff55;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        a {
-            color: #00ff00;
-            text-decoration: none;
+        
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: #00ff55;
+            animation: blink 1s infinite;
         }
-        a:hover {
-            text-decoration: underline;
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .highlight {
+            color: #00ff55;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .title-box {
+                padding: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <pre>
-╭───────────────────────────────────────────────╮
-│ CHANDRA AJI ANINDRA - SOFTWARE ENGINEER       │
-╰───────────────────────────────────────────────╯
-        </pre>
-        <p>Email: <a href="mailto:chandra1293@live.com">chandra1293@live.com</a></p>
-        <p>LinkedIn: <a href="https://www.linkedin.com/in/chandra-anindra/" target="_blank">@chandra-anindra</a></p>
-    </header>
-
-    <div class="content">
-        <section class="section" id="about">
-            <h2>About</h2>
-            <p>A versatile IT enthusiast with strong motivational drive to succeed in the real world. Experienced software engineer with a passion for developing innovative solutions and a track record of success in the industry.</p>
-        </section>
-
-        <section class="section" id="experience">
-            <h2>Work Experience</h2>
-
-            <h3>Back End Developer</h3>
-            <ul>
-                <li>Company: PT. Infosys Solusi Terpadu · Full-time</li>
-                <li>Period: Jul 2023 - Present · 1 yr 3 mos</li>
-                <li>Location: Jakarta, Indonesia · Hybrid</li>
-            </ul>
-
-            <h3>Infrastructure Engineer</h3>
-            <ul>
-                <li>Company: JULO</li>
-                <li>Period: Oct 2022 - Jun 2023 · 9 mos</li>
-                <li>Skills: Jenkins · Nginx · Grafana · Django · Kubernetes</li>
-            </ul>
-
-            <h3>Full-stack Developer</h3>
-            <ul>
-                <li>Company: Titipaja · Full-time</li>
-                <li>Period: May 2021 - Sep 2022 · 1 yr 5 mos</li>
-                <li>Location: Jakarta, Indonesia</li>
-            </ul>
-
-            <h3>Java Software Engineer</h3>
-            <ul>
-                <li>Company: Prudential Indonesia (PT Prudential Life Assurance) · Contract</li>
-                <li>Period: Nov 2019 - Apr 2021 · 1 yr 6 mos</li>
-                <li>Location: Greater Jakarta Area, Indonesia</li>
-            </ul>
-
-            <h3>Junior Java Developer</h3>
-            <ul>
-                <li>Company: PT FIRST WAP International (1rstWAP)</li>
-                <li>Period: Jun 2018 - Sep 2019 · 1 yr 4 mos</li>
-            </ul>
-
-            <h3>Programmer</h3>
-            <ul>
-                <li>Company: Gameloft</li>
-                <li>Period: Feb 2017 - Jan 2018 · 1 yr</li>
-                <li>Location: Yogyakarta Area, Yogyakarta, Indonesia</li>
-            </ul>
-        </section>
-
-        <section class="section" id="education">
-            <h2>Education</h2>
-            <h3>Universitas Jenderal Soedirman</h3>
-            <p>Location: Purwokerto,Central Java</p>
-            <p>Degree: Bachelor of Computer</p>
-        </section>
-
-        <section class="section" id="skills">
-            <h2>Skills</h2>
-            <div class="grid">
-                <ul>
-                    <li>Java</li>
-                    <li>Spring Boot</li>
-                    <li>MySQL</li>
-                    <li>PostgreSQL</li>
-                    <li>JavaScript</li>
-                </ul>
-                <ul>
-                    <li>HTML</li>
-                    <li>Docker</li>
-                    <li>Kubernetes</li>
-                    <li>AWS</li>
-                    <li>GCP</li>
-                </ul>
+    <div class="container">
+        <header>
+            <div class="title-box">
+                <h1>CHANDRA AJI ANINDRA</h1>
+                <p>SENIOR BACKEND DEVELOPER</p>
             </div>
-        </section>
-
-        <section class="section" id="certifications">
-            <h2>Certifications</h2>
-            <ul>
-                <li>AWS Academy Graduate - AWS Academy Cloud Foundations (Amazon Web Services)
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span class="contact-icon">📍</span>
+                    <span>Bekasi, Indonesia</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <span><a href="mailto:chandra1293@live.com" style="color: #00ff55;">chandra1293@live.com</a></span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🐱</span>
+                    <span><a href="https://github.com/chndranndr" target="_blank" style="color: #00ff55;">github.com/chndranndr</a></span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🔗</span>
+                    <span><a href="https://www.linkedin.com/in/chandra-anindra/" target="_blank" style="color: #00ff55;">linkedin.com/in/chandra-anindra</a></span>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <section class="section" id="summary">
+                <h2>CAREER SUMMARY</h2>
+                <p>Results-driven <span class="highlight">Senior Backend Developer</span> with <span class="highlight">8+ years</span> of experience designing, developing, and optimizing high-performance backend systems and microservices for <span class="highlight">Fintech, E-commerce (including B2C, C2C, and B2B2C models), Logistics, and Gaming sectors</span>. Proven ability to enhance system efficiency reduced API latency by up to 50% by proper caching system and deliver robust features using Java Spring Boot, PostgreSQL, Redis, Kafka, and Kubernetes. Adept at architecting scalable solutions handling up to 10,000 daily transaction and leading backend initiatives in fast-paced, collaborative environments.</p>
+            </section>
+            
+            <section class="section" id="skills">
+                <h2>TECHNICAL SKILLS</h2>
+                <div class="skills-grid">
+                    <div class="skills-category">
+                        <h3>Languages</h3>
+                        <ul>
+                            <li>Java</li>
+                            <li>Python</li>
+                            <li>C++</li>
+                            <li>SQL</li>
+                            <li>JavaScript</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Frameworks/Libraries</h3>
+                        <ul>
+                            <li>Spring Boot</li>
+                            <li>Django</li>
+                            <li>OpenGL</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Databases & Caching</h3>
+                        <ul>
+                            <li>PostgreSQL</li>
+                            <li>MySQL</li>
+                            <li>Redis</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Messaging Queues</h3>
+                        <ul>
+                            <li>Kafka</li>
+                            <li>ArtemisMQ</li>
+                            <li>RabbitMQ</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>DevOps & Cloud</h3>
+                        <ul>
+                            <li>Kubernetes</li>
+                            <li>Docker</li>
+                            <li>Jenkins</li>
+                            <li>OpenShift</li>
+                            <li>AWS</li>
+                            <li>Alibaba Cloud</li>
+                            <li>Ansible</li>
+                            <li>Nginx</li>
+                            <li>Git</li>
+                            <li>Gitlab</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Monitoring & Logging</h3>
+                        <ul>
+                            <li>Grafana</li>
+                            <li>Prometheus</li>
+                            <li>Datadog</li>
+                            <li>Kibana</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>API & Protocols</h3>
+                        <ul>
+                            <li>RESTful APIs</li>
+                            <li>Swagger/OpenAPI</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="section" id="experience">
+                <h2>PROFESSIONAL EXPERIENCE</h2>
+                
+                <div class="job">
+                    <div class="company">PT Infosys Solusi Terpadu - Jakarta, Indonesia</div>
+                    <div class="job-title">Senior Backend Developer</div>
+                    <div class="period">Jul 2023 - Present</div>
                     <ul>
-                        <li>Issued by: Amazon Web Services Training and Certification</li>
-                        <li>Issued on: 09 Sep 2021</li>
-                        <li>Skills: AWS Architecture, AWS Cloud, AWS Core Services, AWS Pricing, AWS Support</li>
-                        <li><a href="https://www.credly.com/badges/8969ffe0-a706-4142-b493-a3062fb8f433" target="_blank">View Certificate</a></li>
+                        <li>Optimized API response time by 50% for the core <a href="https://brankaslm.com/dashboard" target="_blank">Antam Logam Mulia</a> transaction service (Java Spring Boot, PostgreSQL) handling 10,000 daily transactions through strategic Redis caching and event driven implementation using ArtemisMQ.</li>
+                        <li>Led backend development team for the new custom data encryption module to meet PDP regulation ensuring protection for sensitive customer financial data, collaborating with 3 front-end and security vendor.</li>
+                        <li>Architected and delivered scalable microservices for payment gateway integration using Java Spring Boot and ArtemisMQ on OpenShift, enabling processing of 5x peak transaction volume compared to the previous system.</li>
+                        <li>Enhanced system security by implementing request body encryption across primary APIs, protecting sensitive customer data.</li>
+                        <li>Implemented database indexing and views that reduced query time by up to 30%.</li>
                     </ul>
-                </li>
-            </ul>
-        </section>
+                </div>
+                
+                <div class="job">
+                    <div class="company">Julo - Jakarta, Indonesia</div>
+                    <div class="job-title">Infrastructure Engineer</div>
+                    <div class="period">Oct 2022 - Jun 2023</div>
+                    <ul>
+                        <li>Deployed and managed scalable Kubernetes clusters on Alibaba Cloud hosting 5 business-critical microservices, achieving 99.5% uptime.</li>
+                        <li>Established comprehensive monitoring dashboards using Datadog and Kibana, reducing mean time to detection (MTTD) for critical infrastructure issues by 50%.</li>
+                        <li>Automated infrastructure provisioning and application deployment processes using Ansible and Jenkins, cutting manual deployment time by 40%.</li>
+                        <li>Streamlined CI/CD pipelines using Docker and Kubernetes, enabling development teams to increase deployment frequency by 2x.</li>
+                    </ul>
+                </div>
+                
+                <div class="job">
+                    <div class="company">Titipaja - Jakarta, Indonesia</div>
+                    <div class="job-title">Full-Stack Developer</div>
+                    <div class="period">May 2021 - Sep 2022</div>
+                    <ul>
+                        <li>Developed the end-to-end Pickup Management System (Java Spring Boot, JavaScript, PostgreSQL), automating key logistics workflows and reducing manual scheduling effort by 60%.</li>
+                        <li>Integrated with <span class="highlight">B2B2C e-commerce platforms</span> to streamline inbound goods management for warehouse operations.</li>
+                        <li>Engineered database schemas (PostgreSQL) and implemented Redis caching strategies, improving data retrieval speed for real-time storage tracking by 40%.</li>
+                        <li>Containerized core backend applications using Docker and deployed on AWS EC2, significantly improving deployment consistency and reducing setup time.</li>
+                        <li>Integrated Kafka messaging queue for asynchronous event processing between order and notification services, enhancing system resilience.</li>
+                    </ul>
+                </div>
+                
+                <div class="job">
+                    <div class="company">Prudential - Jakarta, Indonesia</div>
+                    <div class="job-title">Backend Developer</div>
+                    <div class="period">Nov 2019 - Apr 2021</div>
+                    <ul>
+                        <li>Developed & maintained core backend for Business Rules Management System (Java Spring Boot), automating policy eligibility checks for 1000+ officers and reducing manual processing time by 30%.</li>
+                        <li>Developed a mini-website for digital document signing (Java Spring Boot) that successfully reduced physical queues at branches by 50%, handling 100+ digital signatures per week.</li>
+                        <li>Built a reusable Java library for common data validation rules, adopted by other development teams and reducing redundant code.</li>
+                        <li>Contributed to containerizing legacy applications using Docker, facilitating smoother deployments within kubernetes environment.</li>
+                    </ul>
+                </div>
+                
+                <div class="job">
+                    <div class="company">PT. Firstwap International - Jakarta, Indonesia</div>
+                    <div class="job-title">Java Developer</div>
+                    <div class="period">Jun 2018 - Sep 2019</div>
+                    <ul>
+                        <li>Developed and maintained Java Spring Boot applications supporting telco subscriber provisioning services, utilizing MySQL, Redis, and RabbitMQ.</li>
+                        <li>Contributed to the design and implementation of a new data input module, handling millions row of csv in under 10 minutes.</li>
+                        <li>Identified and resolved critical performance bottlenecks through code optimization and database query tuning.</li>
+                    </ul>
+                </div>
+                
+                <div class="job">
+                    <div class="company">Gameloft - Yogyakarta, Indonesia</div>
+                    <div class="job-title">C++ Programmer</div>
+                    <div class="period">Feb 2017 - Jan 2018</div>
+                    <ul>
+                        <li>Implemented core gameplay mechanics and enemy AI systems using C++ for the <a href="https://www.gameloft.com/dead-rivals/" target="_blank">Dead Rivals</a> MMORPG on Android, launched to 50,000+ downloads globally.</li>
+                        <li>Optimized 3D rendering performance using OpenGL techniques, achieving a 50% increase in average frame rate on mid-range target devices which contributed to being awarded Employee of the Month.</li>
+                        <li>Collaborated closely with designers to implement optimized lighting system, maintaining 60fps on low end devices.</li>
+                        <li>Debugged and fixed complex, low-level engine bugs related to memory management and multithreading in C++.</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="section" id="certifications">
+                <h2>Certificate</h2>
+                <ul>
+                    <li><a href="https://www.credly.com/badges/8969ffe0-a706-4142-b493-a3062fb8f433" target="_blank">AWS Academy Graduate - AWS Academy Cloud Foundations (Amazon Web Services)</a>
+                        <ul>
+                            <li>Issued by: Amazon Web Services Training and Certification</li>
+                            <li>Issued on: 09 Sep 2021</li>
+                            <li>Skills: AWS Architecture, AWS Cloud, AWS Core Services, AWS Pricing, AWS Support</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            
+            <section class="section" id="education">
+                <h2>EDUCATION</h2>
+                <div class="education">
+                    <div class="edu-details">
+                        <div class="company">UNIVERSITAS JENDERAL SOEDIRMAN</div>
+                        <div class="job-title">Bachelor of Computer</div>
+                        <div class="period">9/2012 - 9/2016</div>
+                        <p>Informatics Engineering Major</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <div class="terminal-input">
+        <span>user@resume:~$ </span>
+        <div class="cursor"></div>
     </div>
 
     <script>
-        // Add any JavaScript functionality here if needed
+        // Add a subtle typing effect to the terminal prompt
+        document.addEventListener('DOMContentLoaded', function() {
+            const cursor = document.querySelector('.cursor');
+            setInterval(() => {
+                cursor.style.opacity = (cursor.style.opacity === '0' ? '1' : '0');
+            }, 500);
+            
+            // Add scanline animation
+            const scanline = document.createElement('div');
+            scanline.style.position = 'fixed';
+            scanline.style.top = '0';
+            scanline.style.left = '0';
+            scanline.style.width = '100%';
+            scanline.style.height = '2px';
+            scanline.style.background = 'linear-gradient(90deg, transparent, #00ff55, transparent)';
+            scanline.style.zIndex = '9999';
+            scanline.style.animation = 'scanline 8s linear infinite';
+            document.body.appendChild(scanline);
+            
+            // Add subtle hover effects to sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', () => {
+                    section.style.transform = 'translateY(-3px)';
+                    section.style.boxShadow = '0 5px 15px rgba(0, 255, 85, 0.1)';
+                });
+                
+                section.addEventListener('mouseleave', () => {
+                    section.style.transform = 'translateY(0)';
+                    section.style.boxShadow = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
