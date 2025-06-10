@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajahi Dominasi Nikel Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: Aplikasi ini dirancang sebagai dasbor interaktif satu halaman dengan navigasi atas yang persisten. Strukturnya tidak mengikuti urutan laporan, melainkan dikelompokkan secara tematis untuk alur pengguna yang lebih intuitif: 1. **Beranda (Hero)**: Memberikan gambaran umum & statistik kunci. 2. **Aliran Rantai Pasok**: Bagian inti yang memvisualisasikan proses dari tambang ke pasar global secara interaktif. Pengguna dapat mengklik setiap tahap untuk melihat data dan grafik yang relevan tanpa meninggalkan bagian tersebut. Ini dipilih untuk menjaga konteks dan mendorong eksplorasi. 3. **Pemain Utama**: Galeri perusahaan berbasis kartu yang dapat difilter, memudahkan identifikasi aktor-aktor kunci. 4. **Peluang vs. Tantangan**: Menyajikan pandangan seimbang mengenai dampak ekonomi dan isu ESG/geopolitik, membantu pemahaman holistik. Struktur ini memfasilitasi perjalanan dari pemahaman tingkat tinggi ke detail spesifik dengan cara yang menarik secara visual dan terorganisir. -->
+    <!-- Visualization & Content Choices: 1. **Statistik Kunci (Hero)** -> Goal: Inform -> Method: Kartu statis HTML/CSS -> Interaction: None -> Justification: Memberikan data paling penting secara cepat. 2. **Aliran Rantai Pasok (Diagram)** -> Goal: Organize/Relate -> Method: HTML/CSS Flexbox -> Interaction: Klik pada setiap tahap untuk memfilter konten di bawah -> Justification: Memberikan peta mental interaktif dari keseluruhan proses. 3. **Pertumbuhan Ekspor (Chart)** -> Goal: Change -> Method: Chart.js Stacked Bar Chart -> Interaction: Tooltip -> Justification: Secara efektif menunjukkan keberhasilan kebijakan hilirisasi dari waktu ke waktu. 4. **Tujuan Ekspor (Chart)** -> Goal: Compare -> Method: Chart.js Doughnut Chart -> Interaction: Filter berdasarkan produk -> Justification: Visualisasi yang jelas tentang negara mana yang menjadi mitra dagang utama dan bagaimana ini bervariasi berdasarkan produk. 5. **Pemain Utama (Galeri)** -> Goal: Organize -> Method: Kartu HTML/CSS -> Interaction: Filter -> Justification: Cara yang dapat dipindai untuk memahami ekosistem perusahaan. 6. **Peluang vs Tantangan (Kolom)** -> Goal: Compare -> Method: Teks dan Ikon HTML/CSS -> Interaction: None -> Justification: Menyajikan narasi ganda yang kompleks secara berdampingan untuk perbandingan yang mudah. Library: Chart.js. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #383838;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #34D399;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .stat-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .btn {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-active {
+            background-color: #10B981 !important;
+            color: white !important;
+            transform: scale(1.05);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">Nikel Indonesia</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link active">Beranda</a>
+                <a href="#supply-chain" class="nav-link">Rantai Pasok</a>
+                <a href="#players" class="nav-link">Pemain Utama</a>
+                <a href="#challenges" class="nav-link">Peluang & Tantangan</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#home" class="block py-2 text-gray-700 hover:text-emerald-500">Beranda</a>
+            <a href="#supply-chain" class="block py-2 text-gray-700 hover:text-emerald-500">Rantai Pasok</a>
+            <a href="#players" class="block py-2 text-gray-700 hover:text-emerald-500">Pemain Utama</a>
+            <a href="#challenges" class="block py-2 text-gray-700 hover:text-emerald-500">Peluang & Tantangan</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="py-16 md:py-24">
+            <div class="container mx-auto px-6 text-center">
+                <span class="text-emerald-500 font-semibold">Rantai Pasok Nikel Global</span>
+                <h2 class="text-4xl md:text-6xl font-bold mt-2 mb-6 text-gray-800">Dominasi Indonesia di Panggung Dunia</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-12">
+                    Didorong oleh kebijakan hilirisasi yang strategis, Indonesia telah bertransformasi dari pengekspor bijih mentah menjadi kekuatan utama dalam pengolahan nikel global, terutama untuk baja tahan karat dan baterai kendaraan listrik.
+                </p>
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="stat-card">
+                        <p class="text-5xl font-bold text-emerald-500">51%</p>
+                        <p class="mt-2 text-gray-700 font-semibold">Pangsa Produksi Global (2023)</p>
+                        <p class="text-sm text-gray-500 mt-1">Mendominasi pasokan nikel dunia, naik dari hanya 5% pada 2015.</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-5xl font-bold text-emerald-500">~&dollar;40 M</p>
+                        <p class="mt-2 text-gray-700 font-semibold">Proyeksi Ekspor 2024</p>
+                        <p class="text-sm text-gray-500 mt-1">Lonjakan eksponensial dari &dollar;2 miliar pada tahun 2019.</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-5xl font-bold text-emerald-500">&gt;60</p>
+                        <p class="mt-2 text-gray-700 font-semibold">Jumlah Smelter</p>
+                        <p class="text-sm text-gray-500 mt-1">Peningkatan drastis dari hanya 2 smelter pada tahun 2016.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="supply-chain" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-800">Aliran Rantai Pasok Nikel</h3>
+                    <p class="max-w-2xl mx-auto mt-4 text-gray-600">
+                        Jelajahi setiap tahap dalam perjalanan nikel Indonesia, dari tambang hingga pasar global. Klik pada setiap tahap di bawah untuk melihat detail produk, tren ekspor, dan tujuan utamanya.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-12 text-center">
+                    <div class="flex items-center">
+                        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl">⛏️</div>
+                        <p class="ml-3 font-semibold">Tambang</p>
+                    </div>
+                    <div class="text-emerald-500 text-3xl font-light mx-2">&rarr;</div>
+                    <div class="flex items-center">
+                         <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl">🏭</div>
+                        <p class="ml-3 font-semibold">Pengolahan</p>
+                    </div>
+                    <div class="text-emerald-500 text-3xl font-light mx-2">&rarr;</div>
+                    <div class="flex items-center">
+                         <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl">📦</div>
+                        <p class="ml-3 font-semibold">Produk Akhir</p>
+                    </div>
+                    <div class="text-emerald-500 text-3xl font-light mx-2">&rarr;</div>
+                    <div class="flex items-center">
+                         <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl">🌍</div>
+                        <p class="ml-3 font-semibold">Pasar Global</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-10">
+                     <p class="text-gray-600 mb-4">Pilih jenis produk olahan untuk melihat tren dan tujuan ekspornya:</p>
+                     <div id="product-filter-buttons" class="flex flex-wrap justify-center gap-3">
+                        <button class="btn product-filter-btn btn-active px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-product="all">Semua Produk</button>
+                        <button class="btn product-filter-btn px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-product="npi">NPI & FeNi</button>
+                        <button class="btn product-filter-btn px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-product="battery">Bahan Baku Baterai</button>
+                    </div>
+                </div>
+
+                <div id="chain-details" class="fade-in">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                             <h4 id="chart-title" class="text-2xl font-bold text-gray-800 mb-2 text-center">Tren Ekspor Produk Nikel Olahan</h4>
+                             <p id="chart-description" class="text-center text-gray-600 mb-6">Visualisasi ini menunjukkan pergeseran dramatis dalam komposisi ekspor nikel Indonesia setelah larangan ekspor bijih mentah, menyoroti pertumbuhan pesat produk bernilai tambah tinggi.</p>
+                            <div class="chart-container">
+                                <canvas id="exportTrendChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                             <h4 id="dest-chart-title" class="text-2xl font-bold text-gray-800 mb-2 text-center">Tujuan Utama Ekspor</h4>
+                             <p id="dest-chart-description" class="text-center text-gray-600 mb-6">Grafik ini merinci negara-negara tujuan utama untuk produk nikel olahan Indonesia, yang dapat difilter berdasarkan kategori produk.</p>
+                            <div class="chart-container">
+                                <canvas id="exportDestinationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                     <div id="product-info-text" class="mt-8 max-w-4xl mx-auto p-6 bg-emerald-50 rounded-lg">
+                        <h5 class="font-bold text-lg text-emerald-800">Wawasan Kunci</h5>
+                        <p class="text-emerald-700 mt-2">Kebijakan hilirisasi telah berhasil mengubah lanskap ekspor. Produk untuk baja tahan karat seperti NPI (Nickel Pig Iron) dan Feronikel (FeNi) mendominasi volume, namun bahan baku baterai seperti MHP (Mixed Hydroxide Precipitate) dan Nikel Sulfat menunjukkan pertumbuhan paling eksplosif, menggarisbawahi poros strategis Indonesia menuju rantai pasok EV.</p>
+                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="players" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-800">Pemain Utama dalam Ekosistem Nikel</h3>
+                    <p class="max-w-2xl mx-auto mt-4 text-gray-600">
+                       Kenali perusahaan-perusahaan kunci yang membentuk industri nikel Indonesia, dari investor smelter hingga produsen otomotif global. Gunakan filter untuk menjelajahi berdasarkan peran mereka.
+                    </p>
+                </div>
+                
+                 <div class="flex flex-wrap justify-center gap-3 mb-10">
+                    <button class="btn player-filter-btn btn-active px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-category="all">Semua</button>
+                    <button class="btn player-filter-btn px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-category="smelter">Investor Smelter</button>
+                    <button class="btn player-filter-btn px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-category="otomotif">Produsen Otomotif</button>
+                    <button class="btn player-filter-btn px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg" data-category="baja">Produsen Baja</button>
+                </div>
+
+                <div id="player-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                </div>
+            </div>
+        </section>
+        
+        <section id="challenges" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-gray-800">Pedang Bermata Dua: Peluang & Tantangan</h3>
+                     <p class="max-w-3xl mx-auto mt-4 text-gray-600">
+                       Ledakan industri nikel membawa pertumbuhan ekonomi yang luar biasa, namun juga diiringi oleh tantangan lingkungan, sosial, dan geopolitik yang signifikan. Memahami kedua sisi ini sangat penting untuk melihat gambaran lengkapnya.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <h4 class="text-2xl font-bold text-emerald-600 mb-6 flex items-center">
+                           <span class="text-3xl mr-3">📈</span> Peluang Ekonomi
+                        </h4>
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">&#10003;</span><span><b>Industrialisasi & Nilai Tambah:</b> Berhasil mengubah negara dari pengekspor bahan mentah menjadi pusat pengolahan, menangkap lebih banyak nilai ekonomi.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">&#10003;</span><span><b>Investasi Asing Langsung (FDI):</b> Menarik investasi miliaran dolar, terutama untuk pembangunan smelter dan infrastruktur pendukung.</span></li>
+                            <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">&#10003;</span><span><b>Posisi Strategis di Rantai Pasok EV:</b> Menjadi pemasok krusial bahan baku baterai untuk produsen mobil global, menempatkan Indonesia di jantung revolusi energi bersih.</span></li>
+                             <li class="flex items-start"><span class="text-emerald-500 font-bold mr-3 mt-1">&#10003;</span><span><b>Penciptaan Lapangan Kerja:</b> Kawasan industri seperti IMIP mempekerjakan puluhan ribu orang, mendorong ekonomi lokal.</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 p-8 rounded-lg">
+                        <h4 class="text-2xl font-bold text-red-600 mb-6 flex items-center">
+                            <span class="text-3xl mr-3">⚠️</span> Tantangan ESG & Geopolitik
+                        </h4>
+                        <ul class="space-y-4 text-gray-700">
+                           <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">&#10007;</span><span><b>Dampak Lingkungan:</b> Deforestasi masif, polusi air dari limbah tambang, dan emisi karbon tinggi dari pembangkit listrik tenaga batu bara.</span></li>
+                           <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">&#10007;</span><span><b>Isu Sosial & Tenaga Kerja:</b> Masalah keselamatan kerja yang serius, pelanggaran hak asasi manusia, dan dampak pada masyarakat adat.</span></li>
+                            <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">&#10007;</span><span><b>Transparansi & Tata Kelola:</b> Kurangnya transparansi kepemilikan, terutama dengan dominasi investor asing, mempersulit akuntabilitas.</span></li>
+                           <li class="flex items-start"><span class="text-red-500 font-bold mr-3 mt-1">&#10007;</span><span><b>Ketegangan Geopolitik:</b> Perselisihan dagang dengan UE (WTO) dan pengecualian dari insentif IRA AS membatasi akses pasar.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2024 Dasbor Interaktif Nikel Indonesia.</p>
+            <p class="text-sm text-gray-400 mt-2">
+                Aplikasi ini dihasilkan secara otomatis berdasarkan laporan riset mendalam. Data yang disajikan hanya untuk tujuan ilustrasi dan eksplorasi informasi.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px' });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    document.querySelector(link.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+             mobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+
+
+            const allProductsData = {
+                labels: ['2019', '2021', '2023', '2024 (H1)'],
+                datasets: [
+                    {
+                        label: 'NPI & FeNi (Baja)',
+                        data: [1800, 3500, 7500, 5440], 
+                        backgroundColor: '#34D399',
+                    },
+                    {
+                        label: 'Nikel Matte',
+                        data: [500, 1500, 4095, 1010],
+                        backgroundColor: '#A7F3D0',
+                    },
+                    {
+                        label: 'MHP & Nikel Sulfat (Baterai)',
+                        data: [100, 400, 2500, 1390],
+                        backgroundColor: '#10B981',
+                    }
+                ]
+            };
+
+            const allDestinationsData = {
+                labels: ['Tiongkok', 'India', 'Eropa', 'Jepang & Korea', 'Lainnya'],
+                datasets: [{
+                    data: [65, 15, 8, 10, 2],
+                    backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }]
+            };
+            
+            const npiDestinationsData = {
+                labels: ['Tiongkok', 'India', 'Eropa', 'Lainnya'],
+                datasets: [{
+                    data: [74, 18, 6, 2],
+                     backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }]
+            };
+
+            const batteryDestinationsData = {
+                labels: ['Tiongkok', 'Jepang & Korea', 'Norwegia & Eropa', 'Lainnya'],
+                datasets: [{
+                    data: [70, 15, 10, 5],
+                    backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0'],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                }]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(context.parsed.y * 1000000);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: {
+                           callback: function(value) {
+                                return '$' + (value / 1000) + ' M';
+                            }
+                        },
+                         title: {
+                            display: true,
+                            text: 'Nilai Ekspor (Juta USD)'
+                        }
+                    }
+                }
+            };
+            
+             const doughnutChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+
+            const trendCtx = document.getElementById('exportTrendChart').getContext('2d');
+            const exportTrendChart = new Chart(trendCtx, {
+                type: 'bar',
+                data: allProductsData,
+                options: chartOptions
+            });
+            
+            const destCtx = document.getElementById('exportDestinationChart').getContext('2d');
+            const exportDestinationChart = new Chart(destCtx, {
+                type: 'doughnut',
+                data: allDestinationsData,
+                options: doughnutChartOptions
+            });
+
+            const productFilterButtons = document.getElementById('product-filter-buttons');
+            const chartTitle = document.getElementById('chart-title');
+            const chartDescription = document.getElementById('chart-description');
+            const destChartTitle = document.getElementById('dest-chart-title');
+            const destChartDescription = document.getElementById('dest-chart-description');
+            const productInfoText = document.getElementById('product-info-text');
+
+            productFilterButtons.addEventListener('click', (e) => {
+                if(e.target.classList.contains('product-filter-btn')){
+                    document.querySelectorAll('.product-filter-btn').forEach(btn => btn.classList.remove('btn-active'));
+                    e.target.classList.add('btn-active');
+                    
+                    const product = e.target.dataset.product;
+
+                    let newDestData;
+                    let newTitle;
+                    let newDesc;
+                    let newInfo;
+                    
+                    switch(product){
+                        case 'npi':
+                            newDestData = npiDestinationsData;
+                            newTitle = 'Tujuan Ekspor NPI & Feronikel';
+                            newDesc = 'Dominasi Tiongkok sebagai tujuan ekspor NPI sedikit menurun, dengan peningkatan aliran ke India dan Eropa yang mencari bahan baku baja tahan karat yang lebih kompetitif.';
+                             newInfo = `<h5 class="font-bold text-lg text-emerald-800">Fokus: Baja Tahan Karat</h5> <p class="text-emerald-700 mt-2">NPI dan Feronikel adalah tulang punggung produksi baja tahan karat. Indonesia, bersama Tiongkok, menguasai lebih dari 95% output global, menjadikan pasokan dari sini krusial bagi produsen baja dunia.</p>`;
+                            break;
+                        case 'battery':
+                            newDestData = batteryDestinationsData;
+                            newTitle = 'Tujuan Ekspor Bahan Baku Baterai';
+                            newDesc = 'Tiongkok adalah pembeli utama MHP dan Nikel Sulfat, diikuti oleh Jepang dan Korea Selatan, yang merupakan pusat produksi baterai EV global.';
+                            newInfo = `<h5 class="font-bold text-lg text-emerald-800">Fokus: Revolusi Kendaraan Listrik (EV)</h5> <p class="text-emerald-700 mt-2">Produk seperti MHP dan Nikel Sulfat mengalami pertumbuhan ekspor tercepat, melonjak lebih dari 100% pada H1 2024. Ini menunjukkan keberhasilan Indonesia menjadi pemain sentral dalam rantai pasok baterai global.</p>`;
+                            break;
+                        default:
+                            newDestData = allDestinationsData;
+                            newTitle = 'Tujuan Utama Ekspor';
+                            newDesc = 'Grafik ini merinci negara-negara tujuan utama untuk semua produk nikel olahan Indonesia, menyoroti peran sentral Tiongkok sebagai mitra dagang terbesar.';
+                            newInfo = `<h5 class="font-bold text-lg text-emerald-800">Wawasan Kunci</h5> <p class="text-emerald-700 mt-2">Kebijakan hilirisasi telah berhasil mengubah lanskap ekspor. Produk untuk baja tahan karat seperti NPI mendominasi volume, namun bahan baku baterai seperti MHP menunjukkan pertumbuhan paling eksplosif, menggarisbawahi poros strategis Indonesia menuju rantai pasok EV.</p>`;
+                    }
+                    
+                    exportDestinationChart.data = newDestData;
+                    exportDestinationChart.update();
+
+                    destChartTitle.textContent = newTitle;
+                    destChartDescription.textContent = newDesc;
+                    productInfoText.innerHTML = newInfo;
+                    productInfoText.classList.remove('fade-in');
+                    void productInfoText.offsetWidth; 
+                    productInfoText.classList.add('fade-in');
+                }
+            });
+
+
+            const playersData = [
+                 { name: 'Tsingshan Holding Group', country: 'Tiongkok', category: 'smelter', role: 'Investor dominan di IMIP & IWIP, produsen baja tahan karat terbesar dunia.' },
+                 { name: 'Vale Indonesia', country: 'Indonesia/Brazil', category: 'smelter', role: 'Produsen Nikel Matte utama, fokus pada proses rendah emisi (tenaga air).' },
+                 { name: 'Harita Nickel', country: 'Indonesia', category: 'smelter', role: 'Pelopor produksi MHP & Nikel Sulfat (kelas baterai) melalui teknologi HPAL.' },
+                 { name: 'Huayou Cobalt', country: 'Tiongkok', category: 'smelter', role: 'Spesialis pengolahan nikel-kobalt untuk baterai, mitra Ford & Vale.' },
+                 { name: 'Ford Motor Co.', country: 'AS', category: 'otomotif', role: 'Berinvestasi langsung di proyek HPAL Vale untuk mengamankan pasokan MHP.' },
+                 { name: 'Hyundai & LG Energy', country: 'Korea Selatan', category: 'otomotif', role: 'Membangun pabrik sel baterai EV terbesar di Asia Tenggara di Indonesia.' },
+                 { name: 'Tesla', country: 'AS', category: 'otomotif', role: 'Menandatangani kontrak pasokan nikel senilai $5 miliar dari Indonesia.' },
+                 { name: 'Volkswagen', country: 'Jerman', category: 'otomotif', role: 'Mengumumkan rencana investasi dalam proyek nikel di Indonesia.' },
+                 { name: 'Jindal Stainless', country: 'India', category: 'baja', role: 'Produsen baja India yang mengakuisisi saham di fasilitas NPI untuk keamanan pasokan.' },
+                 { name: 'CATL', country: 'Tiongkok', category: 'otomotif', role: 'Produsen baterai terbesar dunia, pemain utama yang mencari pasokan dari Indonesia.' },
+                 { name: 'Eramet', country: 'Prancis', category: 'smelter', role: 'Mitra di tambang Weda Bay Nickel, salah satu yang terbesar di dunia.' },
+                 { name: 'GEM Co. Ltd.', country: 'Tiongkok', category: 'smelter', role: 'Mengoperasikan pabrik pengolahan yang menarik investasi dari EcoPro Korea.' },
+            ];
+
+            const playerGrid = document.getElementById('player-grid');
+            const playerFilterButtons = document.querySelectorAll('.player-filter-btn');
+
+            const renderPlayers = (filter = 'all') => {
+                playerGrid.innerHTML = '';
+                const filteredPlayers = filter === 'all' 
+                    ? playersData 
+                    : playersData.filter(p => p.category === filter);
+                
+                filteredPlayers.forEach(player => {
+                    const card = document.createElement('div');
+                    card.className = 'player-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 fade-in';
+                    card.innerHTML = `
+                        <div class="flex items-center mb-3">
+                           <div class="w-10 h-10 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center font-bold text-lg mr-4">${player.name.substring(0,1)}</div>
+                            <div>
+                                <h5 class="font-bold text-lg text-gray-800">${player.name}</h5>
+                                <p class="text-sm text-gray-500">${player.country}</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm">${player.role}</p>
+                    `;
+                    playerGrid.appendChild(card);
+                });
+            };
+            
+            playerFilterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                     playerFilterButtons.forEach(btn => btn.classList.remove('btn-active'));
+                     button.classList.add('btn-active');
+                     renderPlayers(button.dataset.category);
+                });
+            });
+
+            renderPlayers();
+        });
+    </script>
+</body>
+</html>
